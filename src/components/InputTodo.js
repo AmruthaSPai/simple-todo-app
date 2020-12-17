@@ -1,36 +1,42 @@
-import React, { Component } from "react";
+import React, { useState, useContext } from "react";
+import { TodosContext } from "../context";  
 
-class InputTodo extends Component {
-  state = {
-    title: ""
-  };
-  onChange = e => {
-    this.setState({
-      [e.target.name]: e.target.value
-    });
-  };
+const InputTodo = props => {
+  const [inputText, setInputText] = useState({
+    title: "",
+  })
+  const value = useContext(TodosContext);
+  const { addTodoItem } = value;
 
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.addTodoProps(this.state.title);
-    this.setState({
-      title: ""
-    });
-  };
-  render() {
-    return (
-      <form onSubmit={this.handleSubmit} className="form-container">
-        <input
-          type="text"
-          className="input-text"
-          placeholder="Add todo..."
-          value={this.state.title}
-          name="title"
-          onChange={this.onChange}
-        />
-        <input type="submit" className="input-submit" value="Submit" />
-      </form>
-    );
+  const handleSubmit = e => {
+    e.preventDefault()
+    addTodoItem(inputText.title)
+    setInputText({
+      title: "",
+    })
   }
+
+  const onChange = e => {
+    setInputText({
+      ...inputText,
+      [e.target.name]: e.target.value,
+    })
+  }
+
+  console.log("InputTodo is running", addTodoItem)
+  return (
+    <form onSubmit={handleSubmit} className="form-container">
+      <input
+        type="text"
+        className="input-text"
+        placeholder="Add todo..."
+        value={inputText.title}
+        name="title"
+        onChange={onChange}
+      />
+      <input type="submit" className="input-submit" value="Submit" />
+    </form>
+  )
 }
+
 export default InputTodo;
